@@ -30,7 +30,7 @@ import { categories } from "@/common/constats.common";
 import { useNavigate } from "@/hooks/useNavigate";
 import { generateFilePath } from "@/services/url.service";
 
-const AddProduct = ({ id }: { id?: string }) => {
+const AddProduct = ({ id }: { id?: string | null }) => {
   //IMPORTS
   const navigate = useNavigate();
 

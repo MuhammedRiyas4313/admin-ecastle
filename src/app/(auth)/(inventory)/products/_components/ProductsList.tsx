@@ -101,7 +101,7 @@ function ProductsList() {
               <button
                 className="text-sm hover:text-emerald-700 cursor-pointer"
                 type="button"
-                onClick={() => navigate(`/products/edit/${row?._id}`)}
+                onClick={() => navigate(`/products/edit?id=${row?._id}`)}
               >
                 <IconPencil size={20} />
               </button>
