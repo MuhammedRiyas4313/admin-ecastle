@@ -9,7 +9,7 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   return (
     <div>
-      <AddProduct id={params.id} />
+      <AddProduct id={params?.id} />
     </div>
   );
 }

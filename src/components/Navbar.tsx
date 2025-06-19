@@ -6,7 +6,7 @@ export function Navbar() {
       <div className="flex h-16 items-center px-4 gap-4">
         {/* Mobile: Hamburger + Logo */}
         <div className="flex items-center gap-2 md:hidden">
-          <SidebarTrigger className="md:hidden" />
+          <SidebarTrigger  className="md:hidden" />
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <span className="text-sm font-bold">eC</span>
           </div>

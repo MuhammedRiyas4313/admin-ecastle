@@ -209,3 +209,7 @@
   animation-delay: -0.1s;
 }
 
+
+input[type="text"]::-webkit-search-cancel-button {
+    @apply appearance-none;
+}

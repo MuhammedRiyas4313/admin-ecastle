@@ -15,42 +15,50 @@ import {
 } from "@/components/ui/sidebar";
 
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@radix-ui/react-dialog";
+import { User, ChevronUp, Package, FolderOpen } from "lucide-react";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@radix-ui/react-dialog";
+import logo from "../../public/images/logo.png";
 
 import { useSession } from "next-auth/react";
-import { User, ChevronUp, Package, FolderOpen } from "lucide-react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
-// Menu items
-const items = [
-  { title: "Products", url: "/products", icon: Package },
-  { title: "Categories", url: "/categories", icon: FolderOpen },
-];
+const items = [{ title: "Products", url: "/products", icon: Package }];
 
 export function AppSidebar() {
   const { isOpen, setOpen } = useSidebar();
   const session = useSession();
+  const [isMobile, setIsMobile] = useState(false);
 
-  const SidebarStructure = () => (
-    <Sidebar className="h-screen w-[230px] bg-background border-r">
-      <SidebarHeader className="border-b px-6 py-4">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <span className="text-sm font-bold">eC</span>
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize(); // check initially
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const sidebarContent = (
+    <Sidebar className="h-screen min-w-[230px] bg-background border-r">
+      {!isOpen && (
+        <SidebarHeader className="border-b px-6 py-4">
+          <div className="flex items-center gap-2">
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground overflow-hidden">
+              <Image src={logo} fill alt="Logo"/>
+            </div>
+            <span className="text-lg font-semibold">eCastle</span>
           </div>
-          <span className="text-lg font-semibold">eCastle</span>
-        </div>
-      </SidebarHeader>
+        </SidebarHeader>
+      )}
 
       <SidebarContent className="px-2 py-4">
         <SidebarGroup>
@@ -107,25 +115,24 @@ export function AppSidebar() {
     </Sidebar>
   );
 
-  return (
-    <>
-      {/* Desktop sidebar */}
-      <div className="hidden md:block fixed top-0 left-0 z-50">
-        <SidebarStructure />
-      </div>
-
-      {/* Mobile sidebar (Dialog) */}
+  // ✅ Render one sidebar version based on screen size
+  if (isMobile) {
+    return (
       <Dialog open={isOpen} onOpenChange={setOpen}>
-        <DialogContent
-          className="p-0 w-[230px] h-screen border-none bg-background"
-        >
+        <DialogContent className="p-0 w-[230px] h-screen border-none bg-background">
           <DialogTitle className="sr-only">Sidebar</DialogTitle>
           <DialogDescription className="sr-only">
-            Navigation menu
+            Use this sidebar to navigate.
           </DialogDescription>
-          <SidebarStructure />
+          {sidebarContent}
         </DialogContent>
       </Dialog>
-    </>
+    );
+  }
+
+  return (
+    <div className="fixed top-0 left-0 z-50 hidden md:flex">
+      {sidebarContent}
+    </div>
   );
 }

@@ -10,14 +10,15 @@ import { toastError, toastSuccess } from "@/utils/toast";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { Plus, Tag } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Plus } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import CustomTable from "@/components/table/CustomTable";
-import Link from "next/link";
 import ConfirmationPopup from "@/components/Confirmation";
+import SearchBar from "@/components/SearchBar";
+import { debounce } from "lodash";
 
 function ProductsList() {
   //IMPORTS
@@ -26,10 +27,15 @@ function ProductsList() {
   //STATES
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
+  const [search, setSearch] = useState<string>("");
   const [isConfirm, setIsConfirm] = useState<any>(null);
 
   //DATA
-  const { data, isFetching, isLoading, isRefetching } = useProducts();
+  const { data, isFetching, isLoading, isRefetching } = useProducts({
+    pageIndex,
+    pageSize,
+    search,
+  });
 
   //MUTATION
   const { mutateAsync: deleteProject, isPending } = useDeleteProduct();
@@ -40,11 +46,8 @@ function ProductsList() {
   //HANDLERS
   const handleDelete = async (id: string) => {
     try {
-      if (typeof window !== "undefined") {
-        if (!window.confirm("Are you sure you want to delete?")) {
-          return null;
-        }
-        const res = await deleteProject(id);
+      const res = await deleteProject(id);
+      if (res?.data?.message) {
         toastSuccess(res?.data?.message);
       }
     } catch (error) {
@@ -118,18 +121,37 @@ function ProductsList() {
     return cols;
   }, []);
 
+  //SEARCH HANDLER
+    const debouncedHandleSearch = useCallback(
+    debounce((text: string) => {
+      try {
+        setSearch(text);
+      } catch (error) {
+        console.log(error, "error in the debounce function");
+      }
+    }, 1000),
+    [],
+  );
+
   return (
     <>
       {/* Table Header Section */}
       <div className="mb-6">
         <div className="flex justify-end items-center">
-          <Button
-            onClick={() => navigate("/products/add")}
-            className="bg-black text-white font-semibold"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Item
-          </Button>
+          <div className="flex gap-4">
+            <SearchBar
+              className="bg-[#F5F7F9]"
+              placeholder="Search Players"
+              onChange={(e: any) => debouncedHandleSearch(e.target.value)}
+            />
+            <Button
+              onClick={() => navigate("/products/add")}
+              className="bg-black text-white font-semibold"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Item
+            </Button>
+          </div>
         </div>
       </div>
       {/* Table Container */}
@@ -141,6 +163,8 @@ function ProductsList() {
           loading={loading}
           pageIndex={pageIndex}
           pageSize={pageSize}
+          setPageIndex={setPageIndex}
+          setPageSize={setPageSize}
         />
       </Card>
       <ConfirmationPopup
