@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
         port: "3005",
         pathname: "/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "ecastle-backend.onrender.com",
+        pathname: "/**",
+      },
     ],
   },
   reactStrictMode: false,
