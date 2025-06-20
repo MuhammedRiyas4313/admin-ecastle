@@ -19,15 +19,6 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
-          {/* <Button variant="ghost" size="icon" className="hidden sm:flex">
-            <Search className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <Bell className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <User className="h-4 w-4" />
-          </Button> */}
         </div>
       </div>
     </header>

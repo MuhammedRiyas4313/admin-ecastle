@@ -14,12 +14,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@radix-ui/react-dialog";
 import { User, ChevronUp, Package, FolderOpen } from "lucide-react";
 import {
   DropdownMenu,
@@ -32,6 +26,7 @@ import logo from "../../public/images/logo.png";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Dialog, DialogContent, DialogDescription, DialogOverlay, DialogTitle } from "./ui/dialog";
 
 const items = [{ title: "Products", url: "/products", icon: Package }];
 
@@ -53,7 +48,7 @@ export function AppSidebar() {
         <SidebarHeader className="border-b px-6 py-4">
           <div className="flex items-center gap-2">
             <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground overflow-hidden">
-              <Image src={logo} fill alt="Logo"/>
+              <Image src={logo} fill alt="Logo" />
             </div>
             <span className="text-lg font-semibold">eCastle</span>
           </div>
@@ -119,7 +114,8 @@ export function AppSidebar() {
   if (isMobile) {
     return (
       <Dialog open={isOpen} onOpenChange={setOpen}>
-        <DialogContent className="p-0 w-[230px] h-screen border-none bg-background">
+        <DialogOverlay className="fixed inset-0 bg-black/50 z-[100]" />
+        <DialogContent className="fixed left-[7rem] w-[230px] bg-background z-[110] p-0">
           <DialogTitle className="sr-only">Sidebar</DialogTitle>
           <DialogDescription className="sr-only">
             Use this sidebar to navigate.
