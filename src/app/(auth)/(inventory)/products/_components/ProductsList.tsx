@@ -159,7 +159,6 @@ function ProductsList() {
     []
   );
 
-  console.log(search, "SEARCH");
   return (
     <>
       <div className="mb-6">
@@ -170,17 +169,9 @@ function ProductsList() {
                 value={category} // Controlled value
                 onValueChange={(value) => {
                   setCategory(value); // Update your search state
-                  debouncedHandleSearch(value);
                 }}
               >
-                <SelectTrigger
-                  showClearButton={!!search}
-                  onClear={() => {
-                    setCategory(""); // Clear the search state
-                    debouncedHandleSearch(""); // Trigger search with empty value
-                  }}
-                  className="h-12 w-full"
-                >
+                <SelectTrigger className="h-12 w-full">
                   <SelectValue placeholder="Select category..." />
                 </SelectTrigger>
                 <SelectContent>
