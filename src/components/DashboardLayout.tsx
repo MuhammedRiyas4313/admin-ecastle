@@ -9,7 +9,7 @@ interface LayoutProps {
 export function DashboardLayout({ children }: LayoutProps) {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex flex-col bg-background md:pl-[230px]">  
+      <div className="relative min-h-screen  bg-background md:pl-[230px]">  
         <AppSidebar />
         <div className="flex-1 pt-16 flex flex-col overflow-hidden">
           <Navbar />

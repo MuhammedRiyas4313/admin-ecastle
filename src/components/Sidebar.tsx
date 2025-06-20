@@ -85,10 +85,10 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="w-full justify-between">
-                  <div className="flex items-center gap-3">
+                <SidebarMenuButton className="min-w-[215px] justify-between">
+                  <div className="flex items-center w-full gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent">
-                      {/* <User c///////lassName="h-4 w-4" /> */}
+                      <User className="h-4 w-4" />
                     </div>
                     <div className="text-left">
                       <p className="text-sm font-medium">Admin</p>
@@ -100,7 +100,7 @@ export function AppSidebar() {
                   <ChevronUp className="h-4 w-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="top" className="w-56">
+              <DropdownMenuContent side="top" className="w-56 z-[200]">
                 <DropdownMenuItem>Sign out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -115,7 +115,7 @@ export function AppSidebar() {
     return (
       <Dialog open={isOpen} onOpenChange={setOpen}>
         <DialogOverlay className="fixed inset-0 bg-black/50 z-[100]" />
-        <DialogContent className="fixed left-[7rem] w-[230px] bg-background z-[110] p-0">
+        <DialogContent className="max-h-screen fixed left-[7rem] bottom-42 top-42 w-[230px] bg-background z-[110] p-0">
           <DialogTitle className="sr-only">Sidebar</DialogTitle>
           <DialogDescription className="sr-only">
             Use this sidebar to navigate.
