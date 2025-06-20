@@ -19,6 +19,15 @@ import CustomTable from "@/components/table/CustomTable";
 import ConfirmationPopup from "@/components/Confirmation";
 import SearchBar from "@/components/SearchBar";
 import { debounce } from "lodash";
+import { categories } from "@/common/constats.common";
+import { number } from "zod";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function ProductsList() {
   //IMPORTS
@@ -28,14 +37,31 @@ function ProductsList() {
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [pageSize, setPageSize] = useState<number>(10);
   const [search, setSearch] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
   const [isConfirm, setIsConfirm] = useState<any>(null);
 
+  //USEMEMO
+  const queryObj = useMemo(() => {
+    const obj: any = {
+      pageIndex,
+      pageSize,
+    };
+
+    if (search) {
+      obj.search = search;
+      obj.pageIndex = 0;
+    }
+
+    if (category) {
+      obj.category = category;
+      obj.pageIndex = 0;
+    }
+
+    return obj;
+  }, [pageIndex, pageSize, search, category]);
+
   //DATA
-  const { data, isFetching, isLoading, isRefetching } = useProducts({
-    pageIndex,
-    pageSize,
-    search,
-  });
+  const { data, isFetching, isLoading, isRefetching } = useProducts(queryObj);
 
   //MUTATION
   const { mutateAsync: deleteProject, isPending } = useDeleteProduct();
@@ -101,7 +127,7 @@ function ProductsList() {
               <button
                 className="text-sm hover:text-emerald-700 cursor-pointer"
                 type="button"
-                onClick={() => navigate(`/products/edit?id=${row?._id}`)}
+                onClick={() => navigate(`/products/edit/${row?._id}`)}
               >
                 <IconPencil size={20} />
               </button>
@@ -122,7 +148,7 @@ function ProductsList() {
   }, []);
 
   //SEARCH HANDLER
-    const debouncedHandleSearch = useCallback(
+  const debouncedHandleSearch = useCallback(
     debounce((text: string) => {
       try {
         setSearch(text);
@@ -130,20 +156,56 @@ function ProductsList() {
         console.log(error, "error in the debounce function");
       }
     }, 1000),
-    [],
+    []
   );
 
   return (
     <>
-      {/* Table Header Section */}
       <div className="mb-6">
-        <div className="flex justify-end items-center">
-          <div className="flex gap-4">
+        <div className="flex flex-col md:justify-end md:flex-row gap-4">
+          <div className="flex  w-full md:w-auto gap-4">
+            <div className="w-[70%] md:w-[200px]">
+              <Select onValueChange={(value) => debouncedHandleSearch(value)}>
+                <SelectTrigger
+                  showClearButton={!!search}
+                  onClear={() => setSearch("")}
+                  className="h-12 w-full"
+                >
+                  <SelectValue placeholder="Select category..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories?.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Add Item Button - 30% on mobile, hidden on desktop (will appear at end) */}
+            <div className="w-[30%] md:hidden">
+              <Button
+                onClick={() => navigate("/products/add")}
+                className="bg-black text-white font-semibold  w-full"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Item
+              </Button>
+            </div>
+          </div>
+
+          {/* Search Bar - full width on mobile, flex-1 on desktop */}
+          <div className="w-full md:flex-1 md:max-w-[400px]">
             <SearchBar
-              className="bg-[#F5F7F9]"
+              className="bg-[#F5F7F9] w-full p-2"
               placeholder="Search Players"
               onChange={(e: any) => debouncedHandleSearch(e.target.value)}
             />
+          </div>
+
+          {/* Add Item Button - hidden on mobile, shown at end on desktop */}
+          <div className="hidden md:block">
             <Button
               onClick={() => navigate("/products/add")}
               className="bg-black text-white font-semibold"
