@@ -13,7 +13,7 @@ import Image from "next/image";
 import React, { useCallback, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import CustomTable from "@/components/table/CustomTable";
 import ConfirmationPopup from "@/components/Confirmation";
@@ -159,16 +159,26 @@ function ProductsList() {
     []
   );
 
+  console.log(search, "SEARCH");
   return (
     <>
       <div className="mb-6">
         <div className="flex flex-col md:justify-end md:flex-row gap-4">
           <div className="flex  w-full md:w-auto gap-4">
-            <div className="w-[70%] md:w-[200px]">
-              <Select onValueChange={(value) => debouncedHandleSearch(value)}>
+            <div className="w-[70%] md:w-[200px] relative">
+              <Select
+                value={category} // Controlled value
+                onValueChange={(value) => {
+                  setCategory(value); // Update your search state
+                  debouncedHandleSearch(value);
+                }}
+              >
                 <SelectTrigger
                   showClearButton={!!search}
-                  onClear={() => setSearch("")}
+                  onClear={() => {
+                    setCategory(""); // Clear the search state
+                    debouncedHandleSearch(""); // Trigger search with empty value
+                  }}
                   className="h-12 w-full"
                 >
                   <SelectValue placeholder="Select category..." />
@@ -181,6 +191,18 @@ function ProductsList() {
                   ))}
                 </SelectContent>
               </Select>
+              {!!category && (
+                <span
+                  className="absolute top-2 right-[2rem] rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setCategory("");
+                  }}
+                >
+                  <X className="size-3 opacity-70 hover:opacity-100" />
+                </span>
+              )}
             </div>
 
             {/* Add Item Button - 30% on mobile, hidden on desktop (will appear at end) */}
@@ -196,7 +218,7 @@ function ProductsList() {
           </div>
 
           {/* Search Bar - full width on mobile, flex-1 on desktop */}
-          <div className="w-full md:flex-1 md:max-w-[400px]">
+          <div className="w-full md:flex-1 md:max-w-[200px]">
             <SearchBar
               className="bg-[#F5F7F9] w-full p-2"
               placeholder="Search Players"

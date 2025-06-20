@@ -1,53 +1,55 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as SelectPrimitive from "@radix-ui/react-select"
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon, X } from "lucide-react"
+import * as React from "react";
+import * as SelectPrimitive from "@radix-ui/react-select";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon, X } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function Select({
+  value: propValue,
   onValueChange,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root> & {
-  onValueChange?: (value: string) => void
+  value?: string;
+  onValueChange?: (value: string) => void;
 }) {
-  const [value, setValue] = React.useState<string | undefined>(undefined)
+  const [internalValue, setInternalValue] = React.useState<string | undefined>(undefined);
+  const isControlled = propValue !== undefined;
+  const value = isControlled ? propValue : internalValue;
 
   const handleValueChange = (newValue: string) => {
-    setValue(newValue)
-    onValueChange?.(newValue)
-  }
-
-  const handleClear = () => {
-    setValue(undefined)
-    onValueChange?.("")
-  }
+    if (!isControlled) {
+      setInternalValue(newValue);
+    }
+    onValueChange?.(newValue);
+  };
 
   return (
-    <SelectPrimitive.Root 
+    <SelectPrimitive.Root
       value={value}
       onValueChange={handleValueChange}
       {...props}
     >
       {props.children}
     </SelectPrimitive.Root>
-  )
+  );
 }
-
 function SelectGroup({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Group>) {
-  return <SelectPrimitive.Group data-slot="select-group" {...props} />
+  return <SelectPrimitive.Group data-slot="select-group" {...props} />;
 }
 
 function SelectValue({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Value>) {
-  return <SelectPrimitive.Value data-slot="select-value" {...props} />
+  return <SelectPrimitive.Value data-slot="select-value" {...props} />;
 }
 // Add this type definition near your other types
-type SelectTriggerProps = React.ComponentProps<typeof SelectPrimitive.Trigger> & {
+type SelectTriggerProps = React.ComponentProps<
+  typeof SelectPrimitive.Trigger
+> & {
   size?: "sm" | "default";
   showClearButton?: boolean;
   onClear?: () => void;
@@ -75,21 +77,8 @@ function SelectTrigger({
       <span className="flex-1 flex items-center overflow-hidden">
         {children}
       </span>
-      
+
       <div className="flex items-center gap-1">
-        {showClearButton && (
-          <span
-            className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              console.log('clicking clear button')
-              onClear && onClear();
-            }}
-          >
-            <X className="size-3 opacity-70 hover:opacity-100" />
-          </span>
-        )}
         <SelectPrimitive.Icon asChild>
           <ChevronDownIcon className="size-4 opacity-50" />
         </SelectPrimitive.Icon>
@@ -130,7 +119,7 @@ function SelectContent({
         <SelectScrollDownButton />
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
-  )
+  );
 }
 
 function SelectLabel({
@@ -143,7 +132,7 @@ function SelectLabel({
       className={cn("text-muted-foreground px-2 py-1.5 text-xs", className)}
       {...props}
     />
-  )
+  );
 }
 
 function SelectItem({
@@ -167,7 +156,7 @@ function SelectItem({
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
-  )
+  );
 }
 
 function SelectSeparator({
@@ -180,7 +169,7 @@ function SelectSeparator({
       className={cn("bg-border pointer-events-none -mx-1 my-1 h-px", className)}
       {...props}
     />
-  )
+  );
 }
 
 function SelectScrollUpButton({
@@ -198,7 +187,7 @@ function SelectScrollUpButton({
     >
       <ChevronUpIcon className="size-4" />
     </SelectPrimitive.ScrollUpButton>
-  )
+  );
 }
 
 function SelectScrollDownButton({
@@ -216,7 +205,7 @@ function SelectScrollDownButton({
     >
       <ChevronDownIcon className="size-4" />
     </SelectPrimitive.ScrollDownButton>
-  )
+  );
 }
 
 export {
@@ -230,4 +219,4 @@ export {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-}
+};
