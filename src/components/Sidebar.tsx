@@ -115,7 +115,7 @@ export function AppSidebar() {
     return (
       <Dialog open={isOpen} onOpenChange={setOpen}>
         <DialogOverlay className="fixed inset-0 bg-black/50 z-[100]" />
-        <DialogContent className="max-h-screen fixed left-[7rem] bottom-42 top-42 w-[230px] bg-background z-[110] p-0">
+        <DialogContent className="h-screen fixed left-[7rem] w-[230px] bg-background z-[110] p-0">
           <DialogTitle className="sr-only">Sidebar</DialogTitle>
           <DialogDescription className="sr-only">
             Use this sidebar to navigate.

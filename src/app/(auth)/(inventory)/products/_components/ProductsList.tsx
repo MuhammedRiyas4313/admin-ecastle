@@ -201,7 +201,7 @@ function ProductsList() {
                 onClick={() => navigate("/products/add")}
                 className="bg-black text-white font-semibold  w-full"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-4 h-4" />
                 Add Item
               </Button>
             </div>
